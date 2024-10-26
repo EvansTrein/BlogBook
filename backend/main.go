@@ -1,27 +1,27 @@
 package main
 
-import (
-	"backend/envs"
-	"log"
+import "backend/server"
 
-	"github.com/gin-gonic/gin"
-)
+func init() {
+	server.InitServer()
+}
 
 func main() {
-	r := gin.Default()
-
-	errEnvs := envs.LoadEnvs()
-	if errEnvs != nil {
-		log.Fatal("Ошибка инициализации ENV: ", errEnvs)
-	} else {
-		log.Println("Инициализация ENV прошла успешно")
-	}
-
-	r.GET("/", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "Привет, мир!",
-		})
-	})
-
-	r.Run(":" + envs.ServerEnvs.BACKEND_PORT)
+	server.StartServer()
 }
+
+// func main() {
+// 	r := gin.Default()
+// 	r.Use(cors.Default())
+
+// 	errEnvs := envs.LoadEnvs()
+// 	if errEnvs != nil {
+// 		log.Fatal("Ошибка инициализации ENV: ", errEnvs)
+// 	} else {
+// 		log.Println("Инициализация ENV прошла успешно")
+// 	}
+
+// 	r.GET("/", handlers.GetHandler)
+
+// 	r.Run(":" + envs.ServerEnvs.BACKEND_PORT)
+// }
