@@ -1,0 +1,47 @@
+body {
+  background-color: grey;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+input {
+    max-width: 100%;
+}
+
+.conteinerApp {
+  display: grid;
+  gap: 5px 5px;
+  grid-template-columns: 10% 80% 10%;
+  grid-template-rows: auto 1fr auto;
+  height: 98vh;
+  width: 99%;
+  grid-template-areas:
+    "header header header"
+    "bar    tape   tape"
+    "footer footer footer";
+}
+
+.conteinerApp > * {
+  padding: 1rem;
+  border-radius: 10px;
+}
+
+.header {
+  grid-area: header;
+  background-color: rgb(38, 74, 153);
+}
+
+.bar {
+  grid-area: bar;
+  background-color: rgb(71, 136, 51);
+  text-align: center;
+}
+
+.tape {
+  grid-area: tape;
+  background-color: rgb(201, 202, 202);
+}
+
+.footer {
+  grid-area: footer;
+  background-color: rgb(136, 41, 41);
+}

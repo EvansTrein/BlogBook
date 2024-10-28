@@ -12,6 +12,7 @@ func InitServer() {
 	} else {
 		log.Println("Инициализация ENV прошла успешно")
 	}
+
 }
 
 func StartServer() {
