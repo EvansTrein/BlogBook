@@ -12,11 +12,16 @@
         <form>
           <input type="text" v-model="name" placeholder="Name" /> <br />
           <input type="text" v-model="email" placeholder="email" /> <br />
-          <input type="text" v-model="password" placeholder="password" /> <br />
-          <button @click="signUp">sign up</button>
-          <button type="submit" onclick="return false">sign in</button>
-          <button type="submit" onclick="return false">logout</button>
+          <input
+            type="text"
+            v-model="password"
+            placeholder="password (min 8 symbols)"
+          />
+          <br />
         </form>
+        <button @click="signUp">sign up</button>
+        <button @click="signIn">sign in</button>
+        <button type="submit" onclick="return false">logout</button>
       </div>
     </div>
     <div class="tape">
@@ -35,6 +40,9 @@
           quibusdam ex modi rem consequuntur ad quisquam animi voluptatibus
           unde! Porro culpa officiis eligendi dolorem error illum?
         </p>
+        <p>{{ num }}</p>
+        <button @click="updNumUp">plus</button>
+        <button @click="updNumDown">minus</button>
       </div>
     </div>
     <div class="footer">
@@ -45,21 +53,22 @@
   </div>
 </template>
 
-<script>
-import { signUp } from './assets/JSFuncsServer';
+<script setup>
+import { ref } from "vue";
+import { signUp, signIn } from "./assets/JSFuncsServer";
 
-export default {
-  data() {
-    return {
-      name: "",
-      email: "",
-      password: "",
-      statusForm: localStorage.getItem("statusForm") || "",
-    };
-  },
-  methods: {
-    signUp
-  },
+let name = "";
+let email = "";
+let password = "";
+const statusForm = ref(localStorage.getItem("statusForm") || "");
+const num = ref(0);
+
+const updNumUp = () => {
+  num.value+=10;
+};
+
+const updNumDown = () => {
+  num.value--;
 };
 </script>
 

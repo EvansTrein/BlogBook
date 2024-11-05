@@ -22,7 +22,7 @@ func InitRotes() {
 	router.POST("/user/registration", handlers.SignUpUserHandler)
 
 	// user authorization
-	// router.POST("/user/login", handlers.SignInUserHandler)
+	router.POST("/user/login", handlers.SignInUserHandler)
 
 	// user logout
 	// router.POST("/user/logout", handlers.LogoutUserHandler)

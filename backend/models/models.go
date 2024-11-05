@@ -15,3 +15,9 @@ type RegisterDataUser struct {
 	// requires a valid password with a minimum length of 8 characters
 	Password string `json:"password" binding:"required,min=8"`
 }
+
+
+type Tokens struct {
+	AccessToken  string `json:"accessToken"`
+	RefreshToken string `json:"refreshToken"`
+}

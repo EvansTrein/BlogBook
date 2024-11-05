@@ -28,6 +28,7 @@ func LoadEnvs() error {
 	}
 
 	ServerEnvs.BACKEND_PORT = os.Getenv("BACKEND_PORT")
+	ServerEnvs.JWT_SECRET = os.Getenv("JWT_SECRET")
 
 	ServerEnvs.POSTGRES_USER = os.Getenv("POSTGRES_USER")
 	ServerEnvs.POSTGRES_PASSWORD = os.Getenv("POSTGRES_PASSWORD")
