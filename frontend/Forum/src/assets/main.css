@@ -36,7 +36,7 @@ input {
   text-align: center;
 }
 
-.tape {
+.main {
   grid-area: tape;
   background-color: rgb(201, 202, 202);
 }
@@ -44,4 +44,13 @@ input {
 .footer {
   grid-area: footer;
   background-color: rgb(136, 41, 41);
+}
+
+.allUsers {
+    padding: 10px;
+    margin: 10px;
+    border: 2px solid black;
+    border-radius: 15px;
+    width: 300px;
+    text-align: center;
 }

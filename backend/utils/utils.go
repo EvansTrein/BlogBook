@@ -29,7 +29,7 @@ func CheckPasswordHash(password, hash string) bool {
 func GenerateTokens(userID uint) (models.Tokens, error) {
 	accessToken := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"user_id": userID,
-		"exp":     time.Now().Add(time.Hour * 24).Unix(), // Token validity period 24 hours
+		"exp":     time.Now().Add(time.Hour * 12).Unix(), // Token validity period 12 hours
 	})
 
 	refreshToken := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
@@ -43,7 +43,7 @@ func GenerateTokens(userID uint) (models.Tokens, error) {
 	return models.Tokens{AccessToken: signedAccessToken, RefreshToken: signedRefreshToken}, nil
 }
 
-// token validation
+// refreshToken validation
 func ValidateRefreshToken(tokenString string) (uint, error) {
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {

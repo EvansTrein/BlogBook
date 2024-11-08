@@ -4,16 +4,19 @@ import (
 	"backend/database"
 	"backend/models"
 	"backend/utils"
+	"log"
 	"net/http"
+	"os"
 	"strings"
 
 	"github.com/gin-gonic/gin"
+	"github.com/golang-jwt/jwt"
 )
 
 // user creation
 func SignUpUserHandler(ctx *gin.Context) {
 	var user models.User
-	var registerData models.RegisterDataUser
+	var registerData models.DataUser
 
 	// parsing JSON request body into RegisterData structure
 	if err := ctx.ShouldBindJSON(&registerData); err != nil {
@@ -50,7 +53,7 @@ func SignUpUserHandler(ctx *gin.Context) {
 // User Authentication
 func SignInUserHandler(ctx *gin.Context) {
 
-	var registerData models.RegisterDataUser
+	var registerData models.DataUser
 	if err := ctx.ShouldBindJSON(&registerData); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Incorrect data"})
 		return
@@ -75,10 +78,41 @@ func SignInUserHandler(ctx *gin.Context) {
 	// Create an anonymous structure with only id and email
 	userResponse := struct {
 		ID    uint   `json:"id"`
+		Name  string `json:"name"`
 		Email string `json:"email"`
 	}{
 		ID:    user.ID,
+		Name:  user.Name,
 		Email: user.Email,
 	}
 	ctx.JSON(http.StatusOK, gin.H{"tokens": tokens, "user": userResponse})
+}
+
+func AuthMiddleware() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		tokenValue := strings.Split(ctx.GetHeader("Authorization"), " ")
+		// Checking if the Authorization header is present
+		if len(tokenValue) != 2 {
+			ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Invalid Authorization header format"})
+			return
+		}
+
+		accessToken, err := jwt.Parse(tokenValue[1],
+			func(token *jwt.Token) (interface{}, error) {
+				return []byte(os.Getenv("JWT_SECRET")), nil
+			})
+
+		if err != nil || accessToken == nil || !accessToken.Valid {
+			ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Invalid token"})
+		}
+
+		log.Println("AuthMiddleware - пропустил токен")
+		ctx.Next()
+	}
+}
+
+func GetUsersHandler(ctx *gin.Context) {
+	var allUsers []models.User
+	database.DB.Find(&allUsers)
+	ctx.JSON(http.StatusOK, gin.H{"users": allUsers})
 }

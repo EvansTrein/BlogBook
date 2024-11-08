@@ -11,10 +11,10 @@ import (
 func InitRotes() {
 	router := gin.Default()
 	router.Use(cors.New(cors.Config{
-		AllowOrigins:  []string{"http://localhost:7100"},
-		AllowMethods:  []string{"GET", "POST", "PUT", "DELETE"},
-		AllowHeaders:  []string{"Content-Type", "Authorization"},
-		ExposeHeaders: []string{"Content-Length"},
+		AllowOrigins:     []string{"http://localhost:7100"},
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE"},
+		AllowHeaders:     []string{"Content-Type", "Authorization"},
+		ExposeHeaders:    []string{"Content-Length"},
 		AllowCredentials: true,
 	}))
 
@@ -24,14 +24,11 @@ func InitRotes() {
 	// user authorization
 	router.POST("/user/login", handlers.SignInUserHandler)
 
-	// user logout
-	// router.POST("/user/logout", handlers.LogoutUserHandler)
-
 	// update user info
 	// router.PUT("/user/:id", handlers.UpdateUeserHandler)
 
 	// getting all users
-	// router.GET("/users", handlers.GetUsersHandler)
+	router.GET("/users", handlers.AuthMiddleware(), handlers.GetUsersHandler)
 
 	// delete user
 	// router.DELETE("/user/:id", handlers.DelUeserHandler)

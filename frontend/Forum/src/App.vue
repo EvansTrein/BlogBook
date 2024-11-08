@@ -6,9 +6,10 @@
       </div>
     </div>
     <div class="bar">
-      <div>
-        <h4>icon profile</h4>
-        <h3>{{ statusForm }}</h3>
+        <h4 v-if="appStore.activeUserName">icon profile</h4>
+        <h3>{{ appStore.activeUserName }}</h3>
+        <h3>{{ appStore.activeUserEmail }}</h3>
+      <div v-if="!appStore.activeUserName">
         <form>
           <input type="text" v-model="name" placeholder="Name" /> <br />
           <input type="text" v-model="email" placeholder="email" /> <br />
@@ -21,11 +22,18 @@
         </form>
         <button @click="signUp">sign up</button>
         <button @click="signIn">sign in</button>
-        <button type="submit" onclick="return false">logout</button>
-      </div>
     </div>
-    <div class="tape">
-      <div>
+    <button v-if="appStore.activeUserName" @click="logout">logout</button> <br>
+    <button v-if="appStore.activeUserName === 'admin'" @click="getAllUsers">view all users</button>
+    </div>
+    <div class="main">
+        <div v-for="item in appStore.sessionDataAllUsers" class="allUsers">
+            ID: {{ item.ID }} <br> 
+            Email: {{ item.Email }} <br>
+            Name: {{ item.Name }} <br>
+            <button>Delete</button>
+        </div>
+      <div v-show="false">
         <h4>User:</h4>
         <p>
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Corrupti esse
@@ -40,9 +48,6 @@
           quibusdam ex modi rem consequuntur ad quisquam animi voluptatibus
           unde! Porro culpa officiis eligendi dolorem error illum?
         </p>
-        <p>{{ num }}</p>
-        <button @click="updNumUp">plus</button>
-        <button @click="updNumDown">minus</button>
       </div>
     </div>
     <div class="footer">
@@ -54,22 +59,15 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
-import { signUp, signIn } from "./assets/JSFuncsServer";
+import { useAppStore } from "./stores/AppStore"
+import { signUp, signIn, logout, getAllUsers } from "./JSFuncsServer";
+
+const appStore = useAppStore();
 
 let name = "";
 let email = "";
 let password = "";
-const statusForm = ref(localStorage.getItem("statusForm") || "");
-const num = ref(0);
 
-const updNumUp = () => {
-  num.value+=10;
-};
-
-const updNumDown = () => {
-  num.value--;
-};
 </script>
 
 <style scoped></style>
