@@ -1,24 +1,13 @@
 import { defineStore } from "pinia";
-import { ref } from "vue";
+import { ref, reactive } from "vue";
 
-const activeUserLocalSt =
-  localStorage.length > 0
-    ? JSON.parse(localStorage.getItem("activeUser"))
-    : null;
-
-const activeSessionData =
-  sessionStorage.hasOwnProperty("sessionUserData")
-    ? JSON.parse(sessionStorage.getItem("sessionUserData"))
-    : null;
+localStorage.setItem("sessionTab", "default")
 
 export const useAppStore = defineStore("AppStore", () => {
-  const activeUserName =
-    activeUserLocalSt !== null ? ref(activeUserLocalSt.user.name) : "";
-  const activeUserEmail =
-    activeUserLocalSt !== null ? ref(activeUserLocalSt.user.email) : "";
-  const admin = ref(false);
-//   const sessionDataAllUsers =
-//     activeUserLocalSt !== null ? ref(activeSessionData.users) : "";
-
-  return { admin, activeUserName, activeUserEmail };
+    const sessionTab = ref(localStorage.getItem("sessionTab"))
+    const activeUser = reactive(JSON.parse(localStorage.getItem("activeUser")))
+    
+  return { sessionTab, activeUser };
 });
+
+

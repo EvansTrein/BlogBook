@@ -6,10 +6,8 @@
       </div>
     </div>
     <div class="bar">
-        <h4 v-if="appStore.activeUserName">icon profile</h4>
-        <h3>{{ appStore.activeUserName }}</h3>
-        <h3>{{ appStore.activeUserEmail }}</h3>
-      <div v-if="!appStore.activeUserName">
+        <h4>icon profile</h4>
+      <div>
         <form>
           <input type="text" v-model="name" placeholder="Name" /> <br />
           <input type="text" v-model="email" placeholder="email" /> <br />
@@ -23,16 +21,16 @@
         <button @click="signUp">sign up</button>
         <button @click="signIn">sign in</button>
     </div>
-    <button v-if="appStore.activeUserName" @click="logout">logout</button> <br>
-    <button v-if="appStore.activeUserName === 'admin'" @click="getAllUsers">view all users</button>
+    <button v-if="appStore.activeUser" @click="logout">logout</button> <br>
+    <button v-if="appStore.activeUser && appStore.activeUser.user.name === 'admin'" @click="getAllUsers">view all users</button>
     </div>
     <div class="main">
-        <div v-for="item in appStore.sessionDataAllUsers" class="allUsers">
+        <!-- <div v-for="item in appStore.sessionDataAllUsers" class="allUsers">
             ID: {{ item.ID }} <br> 
             Email: {{ item.Email }} <br>
             Name: {{ item.Name }} <br>
             <button>Delete</button>
-        </div>
+        </div> -->
       <div v-show="false">
         <h4>User:</h4>
         <p>
