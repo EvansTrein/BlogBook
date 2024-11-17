@@ -1,3 +1,7 @@
+if (!localStorage.getItem("sessionTab")) {
+    localStorage.setItem("sessionTab", "default")
+  }
+
 export async function signUp() {
   const responce = await fetch("http://localhost:7000/user/registration", {
     method: "POST",
@@ -33,6 +37,11 @@ export async function signIn() {
 
   if (responce.ok) {
     localStorage.setItem("activeUser", JSON.stringify(data));
+    if (data.user.name === 'admin') {
+        localStorage.setItem("sessionTab", "adminSession")
+    } else {
+        localStorage.setItem("sessionTab", "userSession")
+    }
     window.location.href = window.location.origin + "/user/" + data.user.name;
     // window.location.reload();
   } else {
@@ -47,28 +56,28 @@ export async function logout() {
   //   window.location.reload();
 }
 
-export async function getAllUsers() {
-  const activeUser = JSON.parse(localStorage.getItem("activeUser"));
-  const accessToken = activeUser.tokens.accessToken;
-  // const refreshToken = activeUser.tokens.refreshToken;
+// export async function getAllUsers() {
+//   const activeUser = JSON.parse(localStorage.getItem("activeUser"));
+//   const accessToken = activeUser.tokens.accessToken;
+//   // const refreshToken = activeUser.tokens.refreshToken;
 
-  const responce = await fetch("http://localhost:7000/users", {
-    method: "GET",
-    credentials: "omit",
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      // "Refresh-Token": refreshToken,
-    },
-  });
+//   const responce = await fetch("http://localhost:7000/users", {
+//     method: "GET",
+//     credentials: "omit",
+//     headers: {
+//       Authorization: `Bearer ${accessToken}`,
+//       // "Refresh-Token": refreshToken,
+//     },
+//   });
 
-  const data = await responce.json();
-  console.log(data);
+//   const data = await responce.json();
+//   console.log(data);
 
-  if (!responce.ok) {
-    alert("You need to log into your profile");
-    logout();
-    return
-  };
+//   if (!responce.ok) {
+//     alert("You need to log into your profile");
+//     logout();
+//     return
+//   };
 
-  sessionStorage.setItem("sessionUserData", JSON.stringify(data))
-}
+//   sessionStorage.setItem("sessionAllUsersData", JSON.stringify(data))
+// }

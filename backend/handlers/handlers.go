@@ -11,6 +11,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt"
+	"gorm.io/gorm"
 )
 
 // user creation
@@ -115,4 +116,29 @@ func GetUsersHandler(ctx *gin.Context) {
 	var allUsers []models.User
 	database.DB.Find(&allUsers)
 	ctx.JSON(http.StatusOK, gin.H{"users": allUsers})
+}
+
+func DelUeserHandler(ctx *gin.Context) {
+	var data struct {
+        UserID int `json:"userId"`
+    }
+
+	err := ctx.BindJSON(&data)
+    if err != nil {
+        ctx.JSON(http.StatusBadRequest, gin.H{"error": "Incorrect data"})
+        return
+    }
+
+	var user models.User
+	result := database.DB.Where("id = ?", data.UserID).First(&user)
+	if result.Error != nil {
+		if result.Error == gorm.ErrRecordNotFound {
+			ctx.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
+		} else {
+			ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to delete user"})
+		}
+		return
+	}
+	database.DB.Unscoped().Delete(&user)
+	ctx.JSON(http.StatusOK, gin.H{"message": "User Deleted"})
 }
