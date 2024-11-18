@@ -22,7 +22,7 @@
     </div>
     <div class="main">
       <tapeComp v-if="!dataAllUsers.length != 0" />
-      <allUsersComp :data-all-users="dataAllUsers" @updateDataAllUsers="onUpdateDataAllUsers" />
+      <allUsersComp v-bind:data-all-users="dataAllUsers" @updateDataAllUsers="onUpdateDataAllUsers" />
     </div>
     <div class="footer">
       <div>

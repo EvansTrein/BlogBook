@@ -10,19 +10,18 @@ import (
 func InitServer() {
 	errEnvs := envs.LoadEnvs()
 	if errEnvs != nil {
-		log.Fatal("Ошибка инициализации ENV: ", errEnvs)
+		log.Fatal("ENV initialization error: ", errEnvs)
 	} else {
-		log.Println("Инициализация ENV прошла успешно")
+		log.Println("ENV initialization was successful")
 	}
 
 	errDatabase := database.InitDatabase()
 	if errDatabase != nil {
-		log.Fatal("Ошибка подключения к базе данных: ", errDatabase)
+		log.Fatal("Database connection error: ", errDatabase)
 	} else {
-		log.Println("Успешное подключение к базе данных")
+		log.Println("Successful connection to the database")
 		database.DB.AutoMigrate(&models.User{})
 	}
-
 }
 
 func StartServer() {
