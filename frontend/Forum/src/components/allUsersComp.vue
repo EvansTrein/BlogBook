@@ -1,18 +1,51 @@
 <template>
-  <div v-if="sessionDataAllUsers" >
-    <!-- <div v-for="(item, index) in sessionDataAllUsers.users" :key="item.ID" class="allUsers">
-    ID: {{ item.ID }} <br />
-    Email: {{ item.Email }} <br />
-    Name: {{ item.Name }} <br />
-    <button>Delete</button>
-    </div> -->
-  </div>
+  <div>
+        <div>
+          <div v-for="item in dataAllUsers" class="allUsers">
+            ID: {{ item.ID }} <br />
+            Email: {{ item.Email }} <br />
+            Name: {{ item.Name }} <br />
+            <button @click="deleteUser(item.ID)">Delete</button>
+          </div>
+        </div>
+      </div>
 </template>
 
 <script setup>
-import { ref } from "vue"
+import { defineProps } from 'vue'
 
-const sessionDataAllUsers = ref(JSON.parse(sessionStorage.getItem("sessionAllUsersData")))
+const props = defineProps({
+  dataAllUsers: {
+    type: Array,
+    required: false
+  }
+})
+
+
+
+async function deleteUser(id) {
+    const activeUser = JSON.parse(localStorage.getItem("activeUser"));
+    const accessToken = activeUser.tokens.accessToken;
+
+  const responce = await fetch("http://localhost:7000/user/delete", {
+    method: "DELETE",
+    credentials: "omit",
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+    body: JSON.stringify({ userId: id }),
+  });
+
+  const responceData = await responce.json();
+  if (!responce.ok) {
+    alert(responceData.error);
+    return
+  } else {
+    props.dataAllUsers = props.dataAllUsers.filter(user => user.ID !== id);
+  }
+
+}
+
 </script>
 
 <style scoped>

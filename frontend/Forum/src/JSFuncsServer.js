@@ -1,3 +1,5 @@
+import { ref } from 'vue'
+
 if (!localStorage.getItem("sessionTab")) {
     localStorage.setItem("sessionTab", "default")
   }
@@ -16,7 +18,12 @@ export async function signUp() {
   });
 
   const data = await responce.json();
-  console.log(data);
+
+  if (responce.ok) {
+    alert("User is registered, you can now log in")
+  } else {
+    alert(data.error)
+  }
 }
 
 export async function signIn() {
@@ -56,28 +63,36 @@ export async function logout() {
   //   window.location.reload();
 }
 
-// export async function getAllUsers() {
-//   const activeUser = JSON.parse(localStorage.getItem("activeUser"));
-//   const accessToken = activeUser.tokens.accessToken;
-//   // const refreshToken = activeUser.tokens.refreshToken;
+export function useGetAllUsers() {
+    const dataAllUsers = ref([])
 
-//   const responce = await fetch("http://localhost:7000/users", {
-//     method: "GET",
-//     credentials: "omit",
-//     headers: {
-//       Authorization: `Bearer ${accessToken}`,
-//       // "Refresh-Token": refreshToken,
-//     },
-//   });
+    async function getAllUsers() {
+        const activeUser = JSON.parse(localStorage.getItem("activeUser"));
+        const accessToken = activeUser.tokens.accessToken;
+        // const refreshToken = activeUser.tokens.refreshToken;
+    
+        const responce = await fetch("http://localhost:7000/users", {
+        method: "GET",
+        credentials: "omit",
+        headers: {
+            Authorization: `Bearer ${accessToken}`,
+            // "Refresh-Token": refreshToken,
+        },
+        });
+    
+        const responceData = await responce.json();
+    
+        if (!responce.ok) {
+        alert("You need to log into your profile");
+        logout();
+        return
+        };
+    
+        dataAllUsers.value = responceData.users
+    }
 
-//   const data = await responce.json();
-//   console.log(data);
-
-//   if (!responce.ok) {
-//     alert("You need to log into your profile");
-//     logout();
-//     return
-//   };
-
-//   sessionStorage.setItem("sessionAllUsersData", JSON.stringify(data))
-// }
+    return {
+        dataAllUsers,
+        getAllUsers
+    }
+}

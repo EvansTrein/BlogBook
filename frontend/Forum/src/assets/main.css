@@ -34,6 +34,7 @@ input {
   grid-area: bar;
   background-color: rgb(71, 136, 51);
   text-align: center;
+  position: relative;
 }
 
 .main {
@@ -49,7 +50,8 @@ input {
 .author {
     text-align: center;
     font-size: 25px;
-    margin-top: 100px;
+    position: absolute;
+    bottom: 0;
     /* animation: pulse 1.5s infinite; */
   }
   
