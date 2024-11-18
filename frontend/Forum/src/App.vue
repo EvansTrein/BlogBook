@@ -15,14 +15,14 @@
         </form>
         <button @click="signUp">sign up</button>
         <button @click="signIn">sign in</button>
-      </div>
-      <button v-if="activeUser" @click="logout">logout</button> <br />
-      <button v-if="sessionTab === 'adminSession'" @click="getAllUsers">view all users</button>
+    </div>
+    <button v-if="activeUser" @click="logout">logout</button> <br />
+    <button v-if="sessionTab === 'adminSession'" @click="getAllUsers">view all users</button>
     <p class="author"><a target="_blank" href="https://github.com/EvansTrein">powered by Evans Trein's</a></p>
     </div>
     <div class="main">
       <tapeComp v-if="!dataAllUsers.length != 0" />
-      <allUsersComp :data-all-users="dataAllUsers" />
+      <allUsersComp :data-all-users="dataAllUsers" @updateDataAllUsers="onUpdateDataAllUsers" />
     </div>
     <div class="footer">
       <div>
@@ -48,11 +48,17 @@ const activeUser = ref(JSON.parse(localStorage.getItem("activeUser")))
 const { getAllUsers, dataAllUsers } = useGetAllUsers()
 
 defineProps({
-  dataAllUsers: {
+    dataAllUsers: {
     type: Array,
     required: false
-  }
+    }
 })
+
+defineEmits(['updateDataAllUsers']); // необязательно писать, тут мы указываем какие пользовательские собыития мы слушаем из доч. комп.
+
+function onUpdateDataAllUsers(newData) {
+  dataAllUsers.value = newData;
+}
 
 </script>
 

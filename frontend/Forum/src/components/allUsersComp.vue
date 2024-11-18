@@ -14,13 +14,14 @@
 <script setup>
 import { defineProps } from 'vue'
 
+const emit = defineEmits(['updateDataAllUsers']);
+
 const props = defineProps({
   dataAllUsers: {
     type: Array,
     required: false
   }
 })
-
 
 
 async function deleteUser(id) {
@@ -41,7 +42,8 @@ async function deleteUser(id) {
     alert(responceData.error);
     return
   } else {
-    props.dataAllUsers = props.dataAllUsers.filter(user => user.ID !== id);
+    const filteredUsers = props.dataAllUsers.filter(user => user.ID !== id);
+    emit('updateDataAllUsers', filteredUsers);
   }
 
 }
