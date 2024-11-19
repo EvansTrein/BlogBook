@@ -112,12 +112,14 @@ func AuthMiddleware() gin.HandlerFunc {
 	}
 }
 
+// getting all users
 func GetUsersHandler(ctx *gin.Context) {
 	var allUsers []models.User
 	database.DB.Find(&allUsers)
 	ctx.JSON(http.StatusOK, gin.H{"users": allUsers})
 }
 
+// user remove
 func DelUeserHandler(ctx *gin.Context) {
 	var data struct {
 		UserID int `json:"userId"`
@@ -140,5 +142,21 @@ func DelUeserHandler(ctx *gin.Context) {
 		return
 	}
 	database.DB.Unscoped().Delete(&user)
-	ctx.JSON(http.StatusOK, gin.H{"message": "User Deleted"})
+	ctx.JSON(http.StatusOK, gin.H{"message": "user deleted successfully"})
+}
+
+// user update
+func UpdateUeserHandler(ctx *gin.Context) {
+	userID := ctx.Param("id")
+	log.Println(userID)
+	var userUpdateData models.DataUser
+
+	if err := ctx.ShouldBindJSON(&userUpdateData); err != nil {
+		ctx.JSON(400, gin.H{"error": "Incorrect new data"})
+		return
+	}
+
+	log.Println(userUpdateData)
+
+	ctx.JSON(http.StatusOK, gin.H{"message": "data updated successfully"})
 }

@@ -19,13 +19,14 @@
         <button @click="signIn">sign in</button>
       </div>
       <button v-if="activeUser" @click="logout">logout</button> <br />
-      <button v-if="activeUser">edit profile</button> <br />
+      <button v-if="activeUser" @click="showProfile = !showProfile">edit profile</button> <br />
       <button v-if="sessionTab === 'adminSession'" @click="getAllUsers">view all users</button> <br />
       <p class="author"><a target="_blank" href="https://github.com/EvansTrein">powered by Evans Trein's</a></p>
     </div>
     <div class="main">
       <tapeComp v-if="!dataAllUsers.length != 0" />
       <allUsersComp v-bind:data-all-users="dataAllUsers" @updateDataAllUsers="onUpdateDataAllUsers" />
+      <profileUserComp v-if="showProfile" v-bind:active-user="activeUser" @updateUserData="onUpdateUserData" />
     </div>
     <div class="footer">
       <div>
@@ -38,8 +39,9 @@
 <script setup>
 import tapeComp from "./components/tapeComp.vue";
 import allUsersComp from "./components/allUsersComp.vue"
-import { ref, defineProps } from "vue"
+import profileUserComp from "./components/profileUserComp.vue"
 import { signUp, signIn, logout, useGetAllUsers } from "./JSFuncsServer";
+import { ref, defineProps } from "vue"
 
 let name = "";
 let email = "";
@@ -47,6 +49,8 @@ let password = "";
 
 const sessionTab = ref(localStorage.getItem("sessionTab"))
 const activeUser = ref(JSON.parse(localStorage.getItem("activeUser")))
+const showProfile = ref(false)
+
 
 const { getAllUsers, dataAllUsers } = useGetAllUsers()
 
@@ -54,13 +58,22 @@ defineProps({
     dataAllUsers: {
     type: Array,
     required: false
+    },
+    activeUser: {
+      type: Object,
+      required: false
     }
 })
 
-defineEmits(['updateDataAllUsers']); // необязательно писать, тут мы указываем какие пользовательские собыития мы слушаем из доч. комп.
+defineEmits(['updateDataAllUsers', 'updateUserData']); // необязательно писать, тут мы указываем какие пользовательские собыития мы слушаем из доч. комп.
 
 function onUpdateDataAllUsers(newData) {
   dataAllUsers.value = newData;
+}
+
+function onUpdateUserData(newName, newEmail) {
+  activeUser.value.user.name = newName
+  activeUser.value.user.email = newEmail
 }
 
 </script>

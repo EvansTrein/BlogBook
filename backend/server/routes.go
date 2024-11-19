@@ -13,7 +13,7 @@ func InitRotes() {
 	router.Use(cors.New(cors.Config{
 		AllowOrigins:     []string{"http://localhost:7100"},
 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE"},
-		AllowHeaders:     []string{"Content-Type", "Authorization"},
+		AllowHeaders:     []string{"Content-Type", "Authorization", "Refresh-Token"},
 		ExposeHeaders:    []string{"Content-Length"},
 		AllowCredentials: true,
 	}))
@@ -25,7 +25,7 @@ func InitRotes() {
 	router.POST("/user/login", handlers.SignInUserHandler)
 
 	// update user info
-	// router.PUT("/user/:id", handlers.UpdateUeserHandler)
+	router.PUT("/user/:id/update", handlers.AuthMiddleware(), handlers.UpdateUeserHandler)
 
 	// getting all users
 	router.GET("/users", handlers.AuthMiddleware(), handlers.GetUsersHandler)
