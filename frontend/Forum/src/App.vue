@@ -17,7 +17,8 @@
         <button @click="signIn">sign in</button>
     </div>
     <button v-if="activeUser" @click="logout">logout</button> <br />
-    <button v-if="sessionTab === 'adminSession'" @click="getAllUsers">view all users</button>
+    <button v-if="sessionTab === 'adminSession'" @click="getAllUsers">view all users</button> <br />
+    <button v-if="activeUser">edit profile</button> <br />
     <p class="author"><a target="_blank" href="https://github.com/EvansTrein">powered by Evans Trein's</a></p>
     </div>
     <div class="main">
