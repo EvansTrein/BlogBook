@@ -1,5 +1,4 @@
 <template>
-  <div>
     <div>
       <div v-for="item in dataAllUsers" class="allUsers">
         ID: {{ item.ID }} <br />
@@ -8,7 +7,6 @@
         <button @click="deleteUser(item.ID)">Delete</button>
       </div>
     </div>
-  </div>
 </template>
 
 <script setup>

@@ -6,7 +6,9 @@
       </div>
     </div>
     <div class="bar">
-      <h4>icon profile</h4>
+      <h4 v-if="!activeUser">icon profile default</h4>
+      <h4 v-if="activeUser">{{ activeUser.user.name }}</h4>
+      <h4 v-if="activeUser">{{ activeUser.user.email }}</h4>
       <div v-if="!activeUser">
         <form>
           <input type="text" v-model="name" placeholder="Name" /> <br />
@@ -15,11 +17,11 @@
         </form>
         <button @click="signUp">sign up</button>
         <button @click="signIn">sign in</button>
-    </div>
-    <button v-if="activeUser" @click="logout">logout</button> <br />
-    <button v-if="sessionTab === 'adminSession'" @click="getAllUsers">view all users</button> <br />
-    <button v-if="activeUser">edit profile</button> <br />
-    <p class="author"><a target="_blank" href="https://github.com/EvansTrein">powered by Evans Trein's</a></p>
+      </div>
+      <button v-if="activeUser" @click="logout">logout</button> <br />
+      <button v-if="activeUser">edit profile</button> <br />
+      <button v-if="sessionTab === 'adminSession'" @click="getAllUsers">view all users</button> <br />
+      <p class="author"><a target="_blank" href="https://github.com/EvansTrein">powered by Evans Trein's</a></p>
     </div>
     <div class="main">
       <tapeComp v-if="!dataAllUsers.length != 0" />

@@ -35,6 +35,17 @@ input {
   background-color: rgb(71, 136, 51);
   text-align: center;
   position: relative;
+  overflow-wrap: break-word;
+}
+
+.bar * input {
+  width: 100%;
+  box-sizing: border-box;
+  max-width: 100%;
+  border: 2px solid black;
+  border-radius: 5px;
+  margin-bottom: 5px;
+  padding: 3%;
 }
 
 .main {

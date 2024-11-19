@@ -107,7 +107,7 @@ func AuthMiddleware() gin.HandlerFunc {
 			ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Invalid token"})
 		}
 
-		log.Println("AuthMiddleware - пропустил токен")
+		log.Println("AuthMiddleware - missed a token")
 		ctx.Next()
 	}
 }
@@ -120,14 +120,14 @@ func GetUsersHandler(ctx *gin.Context) {
 
 func DelUeserHandler(ctx *gin.Context) {
 	var data struct {
-        UserID int `json:"userId"`
-    }
+		UserID int `json:"userId"`
+	}
 
 	err := ctx.BindJSON(&data)
-    if err != nil {
-        ctx.JSON(http.StatusBadRequest, gin.H{"error": "Incorrect data"})
-        return
-    }
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Incorrect data"})
+		return
+	}
 
 	var user models.User
 	result := database.DB.Where("id = ?", data.UserID).First(&user)
