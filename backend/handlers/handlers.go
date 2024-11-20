@@ -76,7 +76,7 @@ func SignInUserHandler(ctx *gin.Context) {
 		return
 	}
 
-	// Create an anonymous structure with only id and email
+	// Create an anonymous structure for the response
 	userResponse := struct {
 		ID    uint   `json:"id"`
 		Name  string `json:"name"`
@@ -148,22 +148,28 @@ func DelUeserHandler(ctx *gin.Context) {
 // user update
 func UpdateUeserHandler(ctx *gin.Context) {
 
-	var userUpdateData models.DataUser
+	var userUpdateData models.UpdDataUser
 	if err := ctx.ShouldBindJSON(&userUpdateData); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Incorrect new data"})
 		return
 	}
 
-	var existingUser models.User
-	result := database.DB.Where("email = ?", userUpdateData.Email).First(&existingUser)
-	if result.RowsAffected > 0 {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Email already exists"})
+	var user models.User
+	result := database.DB.Where("id = ?", ctx.Param("id")).First(&user)
+	if result.Error != nil {
+		ctx.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
 		return
 	}
 
-	hashedPassword, err := utils.HashPassword(userUpdateData.Password)
-	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Password hashing error"})
+	if userUpdateData.Name == user.Name && userUpdateData.Email == user.Email && userUpdateData.Password == "" {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "No new data"})
+		return
+	}
+
+	var checkEmailUser models.User
+	result = database.DB.Where("email = ?", userUpdateData.Email).First(&checkEmailUser)
+	if result.RowsAffected > 0 && user.ID != checkEmailUser.ID {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Email already exists"})
 		return
 	}
 
@@ -180,19 +186,20 @@ func UpdateUeserHandler(ctx *gin.Context) {
 		return
 	}
 
-	var user models.User
-	result = database.DB.Where("id = ?", ctx.Param("id")).First(&user)
-	if result.Error != nil {
-		ctx.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
-		return
+	if len(userUpdateData.Password) != 0 {
+		hashedPassword, err := utils.HashPassword(userUpdateData.Password)
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Password hashing error"})
+			return
+		}
+		user.Hash = hashedPassword
 	}
 
 	user.Name = userUpdateData.Name
 	user.Email = userUpdateData.Email
-	user.Hash = hashedPassword
 	database.DB.Save(&user)
 
-	// Create an anonymous structure
+	// Create an anonymous structure for the response
 	userResponse := struct {
 		ID    uint   `json:"id"`
 		Name  string `json:"name"`
