@@ -9,7 +9,7 @@
     <form>
       <input type="text" v-model="newName" placeholder="Name" /> <br />
       <input type="text" v-model="newEmail" placeholder="email" /> <br />
-      <input type="text" v-model="newPassword" placeholder="password (min 8 symbols)"/> <br />
+      <input type="text" v-model="newPassword" placeholder="password (min 8 symbols)" /> <br />
     </form>
     <button @click="updateUser(activeUser.user.id)">send</button>
   </div>
@@ -28,9 +28,10 @@ const props = defineProps({
     }
 })
 
+
 const showChangeForm = ref(false)
-let newName = ""
-let newEmail = ""
+const newName = ref(props.activeUser?.user?.name || '')
+const newEmail = ref(props.activeUser?.user?.email || '')
 let newPassword = ""
 
 

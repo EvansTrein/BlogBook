@@ -147,16 +147,61 @@ func DelUeserHandler(ctx *gin.Context) {
 
 // user update
 func UpdateUeserHandler(ctx *gin.Context) {
-	userID := ctx.Param("id")
-	log.Println(userID)
-	var userUpdateData models.DataUser
 
+	var userUpdateData models.DataUser
 	if err := ctx.ShouldBindJSON(&userUpdateData); err != nil {
-		ctx.JSON(400, gin.H{"error": "Incorrect new data"})
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Incorrect new data"})
 		return
 	}
 
-	log.Println(userUpdateData)
+	var existingUser models.User
+	result := database.DB.Where("email = ?", userUpdateData.Email).First(&existingUser)
+	if result.RowsAffected > 0 {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Email already exists"})
+		return
+	}
 
-	ctx.JSON(http.StatusOK, gin.H{"message": "data updated successfully"})
+	hashedPassword, err := utils.HashPassword(userUpdateData.Password)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Password hashing error"})
+		return
+	}
+
+	refreshToken := ctx.GetHeader("Refresh-Token")
+	userID, err := utils.ValidateRefreshToken(refreshToken)
+	if err != nil {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid refresh token"})
+		return
+	}
+
+	newTokens, err := utils.GenerateTokens(userID)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to generate tokens"})
+		return
+	}
+
+	var user models.User
+	result = database.DB.Where("id = ?", ctx.Param("id")).First(&user)
+	if result.Error != nil {
+		ctx.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
+		return
+	}
+
+	user.Name = userUpdateData.Name
+	user.Email = userUpdateData.Email
+	user.Hash = hashedPassword
+	database.DB.Save(&user)
+
+	// Create an anonymous structure
+	userResponse := struct {
+		ID    uint   `json:"id"`
+		Name  string `json:"name"`
+		Email string `json:"email"`
+	}{
+		ID:    user.ID,
+		Name:  user.Name,
+		Email: user.Email,
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{"message": "data updated successfully", "tokens": newTokens, "user": userResponse})
 }
