@@ -1,25 +1,19 @@
 <template>
- <div v-if="activeUser" class="pofrileUser">
-  <hr>
-  <h3>Profile user</h3>
-  {{ activeUser.user }}
-  <hr>
-  <button @click="showChangeForm = !showChangeForm">change</button>
-  <div v-if="showChangeForm">
-    <form>
-      <input type="text" v-model="newName" placeholder="Name" /> <br />
-      <input type="text" v-model="newEmail" placeholder="email" /> <br />
-      <input type="text" v-model="newPassword" placeholder="password (min 8 symbols)" /> <br />
-    </form>
-    <button @click="updateUser(activeUser.user.id)">send</button>
+  <div v-if="activeUser" class="modalWindow">
+    <h3>Profile user</h3>
+    <div>
+      <form>
+        <input type="text" v-model="newName" placeholder="Name" /> <br />
+        <input type="text" v-model="newEmail" placeholder="email" /> <br />
+        <input type="text" v-model="newPassword" placeholder="password (min 8 symbols)" /> <br />
+      </form>
+      <button @click="updateUser(activeUser.user.id)">send</button>
+    </div>
   </div>
- </div>
 </template>
 
 <script setup>
 import { ref } from "vue";
-
-const emit = defineEmits(["updateUserData"])
 
 const props = defineProps({
     activeUser: {
@@ -29,7 +23,6 @@ const props = defineProps({
 })
 
 
-const showChangeForm = ref(false)
 const newName = ref(props.activeUser?.user?.name || '')
 const newEmail = ref(props.activeUser?.user?.email || '')
 let newPassword = ""
@@ -57,16 +50,52 @@ async function updateUser(id) {
 
   const responceData = await responce.json();
   console.log(responceData)
-  console.log(responce)
-  // if (!responce.ok) {
-  //   alert(responceData.error);
-  //   return;
-  // } else {
-  //   // тут нужно получить новые данные для Vue
-  //   emit('updateUserData', newName, newEmail)
-  // }
+  if (!responce.ok) {
+    alert(responceData.error);
+    return;
+  } else {
+    localStorage.setItem("activeUser", JSON.stringify(responceData))
+    alert("data updated successfully")
+    window.location.href = window.location.origin + "/user/" + responceData.user.name;
+  }
 }
 
 </script>
 
-<style scoped></style>
+<style scoped>
+.modalWindow {
+  position: absolute;
+  z-index: 10;
+  top: 35%;
+  left: 50%;
+  width: 20%;
+  height: 20%;
+  transform: translate(-50%, -50%);
+  background-color: rgb(209, 208, 208);
+  text-align: center;
+  border: 3px solid black;
+}
+
+.modalWindow * button {
+  width: 25%;
+  margin-top: 5px;
+  box-sizing: border-box;
+  border: 2px solid black;
+  border-radius: 5px;
+  background-color: white;
+  transition: box-shadow 0.2s ease-in-out;
+}
+
+.modalWindow * button:hover {
+  background-color: rgb(196, 192, 192);
+  box-shadow: 0 0 15px rgb(25, 128, 16);
+}
+
+.modalWindow * input {
+  margin: 5px;
+  width: 80%;
+  box-sizing: border-box;
+  border-radius: 5px;
+}
+
+</style>

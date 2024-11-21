@@ -26,8 +26,8 @@
     <div class="main">
       <tapeComp v-if="!dataAllUsers.length != 0" />
       <allUsersComp v-bind:data-all-users="dataAllUsers" @updateDataAllUsers="onUpdateDataAllUsers" />
-      <profileUserComp v-if="showProfile" v-bind:active-user="activeUser" @updateUserData="onUpdateUserData" />
     </div>
+    <profileUserComp v-if="showProfile" v-bind:active-user="activeUser" />
     <div class="footer">
       <div>
         <p>footer</p>
@@ -65,15 +65,10 @@ defineProps({
     }
 })
 
-defineEmits(['updateDataAllUsers', 'updateUserData']); // необязательно писать, тут мы указываем какие пользовательские собыития мы слушаем из доч. комп.
+defineEmits(['updateDataAllUsers']); // необязательно писать, тут мы указываем какие пользовательские собыития мы слушаем из доч. комп.
 
 function onUpdateDataAllUsers(newData) {
   dataAllUsers.value = newData;
-}
-
-function onUpdateUserData(newName, newEmail) {
-  activeUser.value.user.name = newName
-  activeUser.value.user.email = newEmail
 }
 
 </script>

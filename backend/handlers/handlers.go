@@ -210,5 +210,5 @@ func UpdateUeserHandler(ctx *gin.Context) {
 		Email: user.Email,
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{"message": "data updated successfully", "tokens": newTokens, "user": userResponse})
+	ctx.JSON(http.StatusOK, gin.H{"tokens": newTokens, "user": userResponse})
 }
