@@ -74,6 +74,7 @@ async function updateUser(id) {
   background-color: rgb(209, 208, 208);
   text-align: center;
   border: 3px solid black;
+  box-shadow: 0 0 30px rgb(5, 5, 5);
 }
 
 .modalWindow * button {
