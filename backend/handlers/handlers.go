@@ -121,18 +121,10 @@ func GetUsersHandler(ctx *gin.Context) {
 
 // user remove
 func DelUeserHandler(ctx *gin.Context) {
-	var data struct {
-		UserID int `json:"userId"`
-	}
-
-	err := ctx.BindJSON(&data)
-	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Incorrect data"})
-		return
-	}
+	idUser := ctx.Param("id")
 
 	var user models.User
-	result := database.DB.Where("id = ?", data.UserID).First(&user)
+	result := database.DB.Where("id = ?", idUser).First(&user)
 	if result.Error != nil {
 		if result.Error == gorm.ErrRecordNotFound {
 			ctx.JSON(http.StatusNotFound, gin.H{"error": "User not found"})

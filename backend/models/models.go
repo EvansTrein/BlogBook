@@ -26,3 +26,11 @@ type Tokens struct {
 	AccessToken  string `json:"accessToken"`
 	RefreshToken string `json:"refreshToken"`
 }
+
+type ResponceError struct {
+	ErrText string
+}
+
+type ResponseMessage struct {
+	Message string
+}

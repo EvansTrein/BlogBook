@@ -31,7 +31,7 @@ func InitRotes() {
 	router.GET("/users", handlers.AuthMiddleware(), handlers.GetUsersHandler)
 
 	// delete user
-	router.DELETE("/user/delete", handlers.AuthMiddleware(), handlers.DelUeserHandler)
+	router.DELETE("/user/:id/delete", handlers.AuthMiddleware(), handlers.DelUeserHandler)
 
 	router.Run(":" + envs.ServerEnvs.BACKEND_PORT)
 }

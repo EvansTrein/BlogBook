@@ -25,13 +25,12 @@ async function deleteUser(id) {
   const activeUser = JSON.parse(localStorage.getItem("activeUser"));
   const accessToken = activeUser.tokens.accessToken;
 
-  const responce = await fetch("http://localhost:7000/user/delete", {
+  const responce = await fetch(`http://localhost:7000/user/${id}/delete`, {
     method: "DELETE",
     credentials: "omit",
     headers: {
       Authorization: `Bearer ${accessToken}`,
     },
-    body: JSON.stringify({ userId: id }),
   });
 
   const responceData = await responce.json();
