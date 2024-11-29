@@ -1,4 +1,4 @@
-module backend
+module authForum
 
 go 1.23.0
 

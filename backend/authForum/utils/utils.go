@@ -1,8 +1,8 @@
 package utils
 
 import (
-	"backend/envs"
-	"backend/models"
+	"authForum/envs"
+	"authForum/models"
 	"fmt"
 	"time"
 

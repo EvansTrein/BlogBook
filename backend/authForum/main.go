@@ -1,6 +1,6 @@
 package main
 
-import "backend/server"
+import "authForum/server"
 
 func init() {
 	server.InitServer()

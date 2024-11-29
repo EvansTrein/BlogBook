@@ -1,7 +1,7 @@
 package database
 
 import (
-	"backend/envs"
+	"authForum/envs"
 	"fmt"
 
 	"gorm.io/driver/postgres"

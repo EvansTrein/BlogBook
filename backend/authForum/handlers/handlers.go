@@ -1,9 +1,9 @@
 package handlers
 
 import (
-	"backend/database"
-	"backend/models"
-	"backend/utils"
+	"authForum/database"
+	"authForum/models"
+	"authForum/utils"
 	"log"
 	"net/http"
 	"os"

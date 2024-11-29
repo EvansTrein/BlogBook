@@ -1,9 +1,9 @@
 package server
 
 import (
-	"backend/database"
-	"backend/envs"
-	"backend/models"
+	"authForum/database"
+	"authForum/envs"
+	"authForum/models"
 	"log"
 )
 
