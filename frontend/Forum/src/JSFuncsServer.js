@@ -22,7 +22,7 @@ export async function signUp() {
   if (responce.ok) {
     alert("User is registered, you can now log in")
   } else {
-    alert(data.error)
+    alert(data.ErrMess + "\n\n" + data.Err)
   }
 }
 
@@ -44,15 +44,15 @@ export async function signIn() {
 
   if (responce.ok) {
     localStorage.setItem("activeUser", JSON.stringify(data));
-    if (data.user.name === 'admin') {
+    if (data.name === 'admin') {
         localStorage.setItem("sessionTab", "adminSession")
     } else {
         localStorage.setItem("sessionTab", "userSession")
     }
-    window.location.href = window.location.origin + "/user/" + data.user.name;
+    window.location.href = window.location.origin + "/user/" + data.name;
     // window.location.reload();
   } else {
-    alert(data.error);
+    alert(data.ErrMess + "\n\n" + data.Err);
   }
 }
 
@@ -65,10 +65,11 @@ export async function logout() {
 
 export function useGetAllUsers() {
     const dataAllUsers = ref([])
-
+		
     async function getAllUsers() {
+			console.log("getAllUsers")
         const activeUser = JSON.parse(localStorage.getItem("activeUser"));
-        const accessToken = activeUser.tokens.accessToken;
+        const accessToken = activeUser.UserTokens.accessToken;
         // const refreshToken = activeUser.tokens.refreshToken;
     
         const responce = await fetch("http://localhost:7000/users", {

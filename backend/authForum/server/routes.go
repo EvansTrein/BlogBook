@@ -25,13 +25,13 @@ func InitRotes() {
 	router.POST("/user/login", handlers.SignInUserHandler)
 
 	// update user info
-	router.PUT("/user/:id/update", handlers.AuthMiddleware(), handlers.UpdateUeserHandler)
+	router.PUT("/user/:id/update", handlers.UpdateUserHandler)
 
 	// getting all users
-	router.GET("/users", handlers.AuthMiddleware(), handlers.GetUsersHandler)
+	router.GET("/users", handlers.GetAllUsersHandler)
 
 	// delete user
-	router.DELETE("/user/:id/delete", handlers.AuthMiddleware(), handlers.DelUeserHandler)
+	router.DELETE("/user/:id/delete", handlers.DelUserHandler)
 
 	router.Run(":" + envs.ServerEnvs.BACKEND_PORT)
 }

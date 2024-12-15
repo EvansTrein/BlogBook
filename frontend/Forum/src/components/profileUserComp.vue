@@ -7,7 +7,7 @@
         <input type="text" v-model="newEmail" placeholder="email" /> <br />
         <input type="text" v-model="newPassword" placeholder="password (min 8 symbols)" /> <br />
       </form>
-      <button @click="updateUser(activeUser.user.id)">send</button>
+      <button @click="updateUser(activeUser.id)">send</button>
     </div>
   </div>
 </template>
@@ -23,8 +23,8 @@ const props = defineProps({
 })
 
 
-const newName = ref(props.activeUser?.user?.name || '')
-const newEmail = ref(props.activeUser?.user?.email || '')
+const newName = ref(props.activeUser?.name || '')
+const newEmail = ref(props.activeUser?.email || '')
 let newPassword = ""
 
 
@@ -49,14 +49,14 @@ async function updateUser(id) {
   });
 
   const responceData = await responce.json();
-  console.log(responceData)
+	
   if (!responce.ok) {
     alert(responceData.error);
     return;
   } else {
     localStorage.setItem("activeUser", JSON.stringify(responceData))
     alert("data updated successfully")
-    window.location.href = window.location.origin + "/user/" + responceData.user.name;
+    window.location.href = window.location.origin + "/user/" + responceData.name;
   }
 }
 

@@ -2,6 +2,7 @@ package utils
 
 import (
 	"authForum/envs"
+	"authForum/logging"
 	"authForum/models"
 	"fmt"
 	"time"
@@ -36,9 +37,17 @@ func GenerateTokens(userID uint) (models.Tokens, error) {
 		"user_id": userID,
 		"exp":     time.Now().Add(time.Hour * 168).Unix(), // Valid for one week
 	})
-	signedAccessToken, _ := accessToken.SignedString([]byte(envs.ServerEnvs.JWT_SECRET))
+	signedAccessToken, err := accessToken.SignedString([]byte(envs.ServerEnvs.JWT_SECRET))
+	if err != nil {
+		logging.LogError.Println("failed to sign AccessToken")
+		return models.Tokens{}, err
+	}
 
-	signedRefreshToken, _ := refreshToken.SignedString([]byte(envs.ServerEnvs.JWT_SECRET))
+	signedRefreshToken, err := refreshToken.SignedString([]byte(envs.ServerEnvs.JWT_SECRET))
+	if err != nil {
+		logging.LogError.Println("failed to sign RefreshToken")
+		return models.Tokens{}, err
+	}
 
 	return models.Tokens{AccessToken: signedAccessToken, RefreshToken: signedRefreshToken}, nil
 }

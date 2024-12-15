@@ -1,25 +1,29 @@
 package models
 
-import "gorm.io/gorm"
-
 type User struct {
-	gorm.Model
-	Name  string `gorm:"not null"`
-	Email string `gorm:"not null;unique"`
-	Hash  string `gorm:"hash" json:"-"`
+	Id           uint   `json:"id"`
+	UserName     string `json:"name"`
+	UserEmail    string `json:"email"`
+	PasswordHash string `json:"password"`
 }
 
 type DataUser struct {
-	Name string  `json:"name"`
-	Email string `json:"email" binding:"required,email"`
-	// requires a valid password with a minimum length of 8 characters
+	Name     string `json:"name"`
+	Email    string `json:"email" binding:"required,email"`
 	Password string `json:"password" binding:"required,min=8"`
 }
 
 type UpdDataUser struct {
-    Name     string `json:"name" binding:"required"`
-    Email    string `json:"email" binding:"required,email"`
-    Password string `json:"password" binding:"omitempty,min=8"`
+	Name     string `json:"name" binding:"required"`
+	Email    string `json:"email" binding:"required,email"`
+	Password string `json:"password" binding:"omitempty,min=8"`
+}
+
+type RespActiveUser struct {
+	Id         uint   `json:"id"`
+	UserName   string `json:"name"`
+	UserEmail  string `json:"email"`
+	UserTokens Tokens
 }
 
 type Tokens struct {
@@ -28,7 +32,8 @@ type Tokens struct {
 }
 
 type ResponceError struct {
-	ErrText string
+	ErrMess string
+	Err     string
 }
 
 type ResponseMessage struct {

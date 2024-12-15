@@ -1,37 +1,24 @@
-version: '3.1'
-
 services:
   db_users:
-      # Название контейнера
       container_name: db_users
-      # Значения переменных окружения
       environment:
         POSTGRES_USER: ${POSTGRES_USER}
         POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      # Образ для контейнера который будет скачан из DockerHub
       image: postgres:15-alpine
-      # Порты, которые будут использоваться в контейнере
       ports:
         - ${POSTGRES_PORT}:${POSTGRES_PORT}
-      # Меняем порт по умолчанию в Postgres контейнере
       command:
         - 'postgres'
         - '-c'
         - 'port=${POSTGRES_PORT}'
-      # Настройки хранилища данных, необходим для сохранения
-      # данных в базе данных при остановке контейнера
       volumes:
         - db_users_vol:/var/lib/postgresql/data
-      # Объявляем внутренную сеть докера, для 
-      # передачи данных между контейнерами
       networks:
         - server_net
 
-# Конфигурация для хранилища данных
 volumes: 
   db_users_vol: {}
 
-# Настройки сетей
 networks:
   server_net:
     driver: bridge

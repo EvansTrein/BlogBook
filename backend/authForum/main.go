@@ -1,8 +1,12 @@
 package main
 
-import "authForum/server"
+import (
+	"authForum/logging"
+	"authForum/server"
+)
 
 func init() {
+	logging.InitLogger()
 	server.InitServer()
 }
 
